@@ -32,7 +32,7 @@ No background image is bundled with this repo (to avoid redistributing a third-p
 Via the terminal:
 
 ```
-omarchy theme install https://github.com/osungjinwoo/omarchy-glass-white
+omarchy-theme-install https://github.com/osungjinwoo/omarchy-glass-white
 ```
 
 Or via the Omarchy menu: `Super + Space` → *Install > Style > Theme* → paste this repo's URL.
