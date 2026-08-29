@@ -66,7 +66,7 @@ hl.layer_rule({
 hl.layer_rule({ match = { namespace = "omarchy-osd" }, blur = true, ignore_alpha = 0 })
 hl.layer_rule({ match = { namespace = "omarchy-notifications" }, blur = true, ignore_alpha = 0 })
 
--- hyprglass is loaded via `hyprpm` (see https://github.com/hyprglass/hyprglass).
+-- hyprglass is loaded via `hyprpm` (see https://github.com/hyprnux/hyprglass).
 --
 -- Loaded via exec_on_start (after the compositor's event loop is already
 -- running) rather than a config-time `plugin =` directive (loaded

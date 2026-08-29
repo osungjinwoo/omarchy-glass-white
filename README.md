@@ -1,6 +1,6 @@
 # Glass White
 
-The light companion to [Glass Black](https://github.com/osungjinwoo/omarchy-glass-black): an [Omarchy](https://omarchy.org) theme built to feel like iOS's Control Center — real frosted glass, not just a blurred rectangle. Uses the [hyprglass](https://github.com/hyprglass/hyprglass) plugin for actual refraction — chromatic aberration, fresnel edge highlighting, specular reflections and lens distortion on window borders — with every tone-mapping knob pinned back to neutral so whatever's behind the glass shows through in its true color, just blurred.
+The light companion to [Glass Black](https://github.com/osungjinwoo/omarchy-glass-black): an [Omarchy](https://omarchy.org) theme built to feel like iOS's Control Center — real frosted glass, not just a blurred rectangle. Uses the [hyprglass](https://github.com/hyprnux/hyprglass) plugin for actual refraction — chromatic aberration, fresnel edge highlighting, specular reflections and lens distortion on window borders — with every tone-mapping knob pinned back to neutral so whatever's behind the glass shows through in its true color, just blurred.
 
 ![preview](preview.png)
 
@@ -13,7 +13,15 @@ The light companion to [Glass Black](https://github.com/osungjinwoo/omarchy-glas
 
 ## Requirements
 
-The glass/refraction effect on window borders needs the [hyprglass](https://github.com/hyprglass/hyprglass) Hyprland plugin, loaded via `hyprpm`. Without it, the theme still works — you get the color palette, rounding, and native Hyprland layer blur on the bar/menus/notifications — you just lose the refraction/chromatic-aberration effect on window borders.
+The glass/refraction effect on window borders needs the [hyprglass](https://github.com/hyprnux/hyprglass) Hyprland plugin. Installing the theme does **not** install this plugin — do it separately, once, via `hyprpm`:
+
+```
+hyprpm add https://github.com/hyprnux/hyprglass
+hyprpm enable hyprglass
+hyprpm reload
+```
+
+Without it, the theme still works — you get the color palette, rounding, and native Hyprland layer blur on the bar/menus/notifications — you just lose the refraction/chromatic-aberration effect on window borders.
 
 ## Wallpaper
 
