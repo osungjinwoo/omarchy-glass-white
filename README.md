@@ -11,37 +11,27 @@ The light companion to [Glass Black](https://github.com/osungjinwoo/omarchy-glas
 - Translucent bar, launcher, notifications, lock screen, and popups all matched to the same glass material with native Hyprland layer blur as a fallback if the plugin isn't loaded
 - Animated gradient border on the active window (`#3e6b96` → `#6b9bc7` at 45°)
 
-## Requirements
+## Install
 
-The glass/refraction effect on window borders needs the [hyprglass](https://github.com/hyprnux/hyprglass) Hyprland plugin, on top of the `.git`-removal step described under Install below. Install the plugin separately, once, via `hyprpm`:
+Run these in order:
 
 ```
 hyprpm add https://github.com/hyprnux/hyprglass
 hyprpm enable hyprglass
 hyprpm reload
-```
 
-Without it, you still get this theme's rounding, opacity, and native Hyprland layer blur on the bar/menus/notifications — you just lose the refraction/chromatic-aberration effect on window borders.
-
-## Wallpaper
-
-One wallpaper is bundled in `backgrounds/`: a generic "abstract grainy texture" JPEG whose original source page couldn't be traced. If this is yours and you'd rather it not be here, open an issue.
-
-## Install
-
-```
 omarchy-theme-install https://github.com/osungjinwoo/omarchy-glass-white
-```
 
-(Or via the Omarchy menu: `Super + Space` → *Install > Style > Theme* → paste this repo's URL.)
-
-This gets you the color palette and translucent bar/menu/notifications right away. It will **not** get you the glass effect or the terminal colors yet — Omarchy refuses to apply `.lua` or terminal-config files from a theme it just git-cloned (they can run code), so `hyprland.lua` and `foot.ini` are silently replaced with generic, recolored versions.
-
-To unlock the real thing, remove the one thing that makes Omarchy treat the install as "untrusted": the leftover `.git` directory from the clone.
-
-```
 rm -rf ~/.config/omarchy/themes/glass-white/.git
 omarchy-theme-set glass-white
 ```
 
-(Or delete `.git` first, then just reselect the theme from the Omarchy menu.) From then on this theme's actual `hyprland.lua` — hyprglass config, rounding, blur — and `foot.ini` apply exactly as shipped in this repo.
+What each part does:
+
+1. **`hyprpm add/enable/reload`** — installs the [hyprglass](https://github.com/hyprnux/hyprglass) plugin, which drives the glass/refraction effect on window borders. Optional: skip it and you still get this theme's rounding, opacity, and native Hyprland layer blur on the bar/menus/notifications, just not the refraction effect.
+2. **`omarchy-theme-install`** — clones this repo and applies it. On its own this only gets you the color palette and translucent bar/menu/notifications: Omarchy refuses to apply `.lua` or terminal-config files from a theme it just git-cloned (they can run code), so `hyprland.lua` and `foot.ini` are silently replaced with generic, recolored versions.
+3. **`rm -rf .git` + `omarchy-theme-set`** — not optional, this is what actually unlocks the glass effect. Deleting the leftover `.git` from the clone makes Omarchy treat the theme as trusted, so reselecting it copies this repo's real `hyprland.lua` (hyprglass config, rounding, blur) and `foot.ini` instead of the generic versions. (Or delete `.git` first, then just reselect the theme from the Omarchy menu instead of running `omarchy-theme-set` by hand.)
+
+## Wallpaper
+
+One wallpaper is bundled in `backgrounds/`: a generic "abstract grainy texture" JPEG whose original source page couldn't be traced. If this is yours and you'd rather it not be here, open an issue.
