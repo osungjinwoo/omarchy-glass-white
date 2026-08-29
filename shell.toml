@@ -1,0 +1,131 @@
+# iOS Glass shell surfaces (light variant): frosted/translucent bar, menu,
+# popups. See /usr/share/omarchy/default/themed/shell.toml.tpl for the full
+# key reference -- this file replaces that generated one for this theme.
+
+[bar]
+background       = "#F2F2F7"
+background-alpha = 0.28
+text             = "#1C1C1E"
+active           = "#FF3B30"
+scale-with-font  = true
+size-horizontal  = 26
+size-vertical    = 28
+
+[hyprland]
+active-border            = "rgba(3e6b96dd)"
+active-border-foreground = "rgba(1c1c1edd)"
+
+[controls]
+normal-color        = "#1C1C1E"
+normal-fill-alpha   = 0.04
+normal-border       = "#1C1C1E"
+normal-border-width = 1
+normal-border-alpha = 0.4
+hover-cursor-color        = "#1C1C1E"
+hover-cursor-fill-alpha   = 0.08
+hover-cursor-border       = "#1C1C1E"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 0.25
+focus-color        = "#1C1C1E"
+focus-fill-alpha   = 0.08
+focus-border       = "#1C1C1E"
+focus-border-width = 1
+focus-border-alpha = 0.25
+selected-color        = "#1C1C1E"
+selected-fill-alpha   = 0.18
+selected-border       = "#1C1C1E"
+selected-border-width = 0
+selected-border-alpha = 1.0
+pressed-fill-alpha   = 0.22
+selection-fill-alpha = 0.35
+
+[spacing]
+scale = 1.0
+scale-with-font = true
+
+[font]
+base-size = 12
+
+[popups]
+background       = "#F2F2F7"
+background-alpha = 0.3
+text             = "#1C1C1E"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+
+[tooltip]
+background       = "#F2F2F7"
+background-alpha = 0.35
+text             = "#1C1C1E"
+border           = "hyprland.active-border-foreground"
+border-alpha     = 1.0
+
+[notifications]
+background       = "#F2F2F7"
+background-alpha = 0.32
+text             = "#1C1C1E"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+countdown        = "#3E6B96"
+
+[launcher]
+background                = "#F2F2F7"
+background-alpha          = 0.28
+text                      = "#1C1C1E"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#1C1C1E"
+scrim-alpha               = 0.25
+selected-background       = "#1C1C1E"
+selected-background-alpha = 0.06
+selected-text             = "#3E6B96"
+selected-border           = "hyprland.active-border-foreground"
+selected-border-alpha     = 0.25
+
+[menu]
+background                = "#F2F2F7"
+background-alpha          = 0.28
+text                      = "#1C1C1E"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#1C1C1E"
+scrim-alpha               = 0.25
+selected-background       = "#1C1C1E"
+selected-background-alpha = 0.06
+selected-text             = "#3E6B96"
+selected-border           = "hyprland.active-border-foreground"
+selected-border-alpha     = 0.25
+
+[polkit]
+background       = "#F2F2F7"
+background-alpha = 0.4
+text             = "#1C1C1E"
+text-error       = "#FF3B30"
+border           = "hyprland.active-border"
+border-error     = "#FF3B30"
+border-alpha     = 1.0
+scrim            = "#1C1C1E"
+scrim-alpha      = 0.3
+accent           = "#3E6B96"
+
+[lock]
+background       = "#F2F2F7"
+background-alpha = 0.38
+text             = "#1C1C1E"
+placeholder      = "#8E8E93"
+text-error       = "#FF3B30"
+border           = "hyprland.active-border"
+border-active    = "hyprland.active-border"
+border-error     = "#FF3B30"
+border-alpha     = 1.0
+selection        = "#3E6B96"
+selection-alpha  = 0.45
+
+[image-picker]
+scrim                   = "#1C1C1E"
+scrim-alpha             = 0.3
+text                    = "#1C1C1E"
+selected-border         = "#3E6B96"
+selected-border-alpha   = 1.0
+unselected-border       = "#1C1C1E"
+unselected-border-alpha = 0.28
