@@ -1,6 +1,49 @@
 -- iOS Glass theme (light variant): bright, translucent, rounded, using the
 -- hyprglass plugin for the frosted "Liquid Glass" window/layer effect.
 
+-- A fixed `sleep N && force_renderer_reload` guess is flaky -- how long
+-- "settled" takes isn't constant, so it sometimes fires before the reload
+-- has actually committed and does nothing. `config.reloaded` is Hyprland's
+-- own signal for "this reload just finished", so kick the renderer from
+-- that instead of guessing a delay. Subscriptions outlive the reload that
+-- registers them (each reload adds another, since Lua state doesn't carry
+-- over to know one's already there), so remove this one the moment it
+-- fires -- otherwise the pile-up would still be running on every future
+-- reload no matter which theme is active by then, which is exactly the
+-- kind of reaching into another theme's session this file shouldn't do.
+-- force_renderer_reload alone fixes the blur render targets (size/passes)
+-- but NOT window opacity: windows that were already open under a theme
+-- without the "-default-opacity" tag removal below (any non-glass theme, or
+-- glass itself before this rule existed) keep the stale "default-opacity"
+-- tag forever -- Hyprland only assigns/removes `tag` on window open, never
+-- retroactively on reload -- so their opacity rule flips between "1 1" and
+-- "0.7 0.55" depending on which windowrule the engine happens to resolve
+-- last, and that resolution only lands on the terminal-tag rule (opacity
+-- 1 1, i.e. full blur) after a SECOND reload once this one has settled.
+-- Confirmed by hand: after switching to this theme, a bare `hyprctl reload`
+-- reliably restores the terminal's blur/opacity that the switch itself
+-- left broken. This marker makes that second reload automatic while
+-- guaranteeing exactly one -- the second reload's own config.reloaded fires
+-- this same handler again (fresh Lua state, so it can't just check a local
+-- flag), finds the marker, deletes it, and stops instead of chaining a
+-- third reload.
+local blur_kick_marker = "/tmp/omarchy-glass-white-blur-kick"
+
+local blur_kick_subscription
+blur_kick_subscription = hl.on("config.reloaded", function()
+  hl.dispatch(hl.dsp.force_renderer_reload())
+  if blur_kick_subscription then blur_kick_subscription:remove() end
+
+  local marker = io.open(blur_kick_marker, "r")
+  if marker then
+    marker:close()
+    os.remove(blur_kick_marker)
+  else
+    io.open(blur_kick_marker, "w"):close()
+    hl.exec_cmd("sleep 0.3 && hyprctl reload")
+  end
+end)
+
 local active_border_color = { colors = { "rgba(3e6b96dd)", "rgba(6b9bc7dd)" }, angle = 45 }
 local inactive_border_color = "rgba(d1d1d677)"
 
@@ -37,15 +80,39 @@ hl.config({
 
     blur = {
       enabled = true,
-      size = 60,
-      passes = 10,
-      new_optimizations = false,
+      size = 10,
+      passes = 4,
+      new_optimizations = true,
+      contrast = 1.0,
+      brightness = 1.0,
+      noise = 0.0,
     },
   },
 })
 
+-- Terminal transparency is fully owned by foot.ini's own alpha (0.3) so it
+-- composites correctly with Hyprland's blur behind it. Leaving it tagged
+-- default-opacity would multiply that alpha by the rule below (0.3 * 0.7 =
+-- ~0.21), making the terminal noticeably more washed-out/blurred-looking
+-- than every other glass surface.
+o.window({ tag = "terminal" }, { tag = "-default-opacity", opacity = "1 1" })
+
+-- Self-hosted/custom web apps launched via omarchy-launch-webapp get an
+-- auto-generated "chrome-<host>__-<profile>" class (confirmed live via
+-- `hyprctl clients` -- e.g. "chrome-192.168.1.142__-Default"), which doesn't
+-- match browser.lua's own "(google-)?[cC]hrom(e|ium)" class regex (Hyprland
+-- class matching is a full match, not a substring search, so the trailing
+-- "-<host>__-<profile>" breaks it). That leaves them tagged default-opacity
+-- and glass-tinted like a normal window instead of reading like Chrome.
+-- Same opt-out browser.lua gives the main browser window.
+o.window("chrome-.*", { tag = "-default-opacity", opacity = "1.0 0.985" })
+
 -- Same low opacity as the dark variant -- genuinely see-through, not just a
--- light-colored panel.
+-- light-colored panel. This is the fallback for ordinary app windows
+-- (anything not opted out above) -- the bar/menu/popups/notifications glass
+-- look lives in shell.toml instead, so it doesn't drag web apps and other
+-- chromium-class windows that don't match browser.lua's regex down to the
+-- same low opacity as the shell.
 o.window({ tag = "default-opacity" }, { opacity = "0.7 0.55" })
 
 -- Native Hyprland layer blur for the Quickshell surfaces (bar, menu/launcher/
@@ -102,7 +169,7 @@ if hl.plugin.hyprglass then
   hg.config({
     default_theme = "light",
     default_preset = "clear",
-    tint_color = 0xf2f2f712,
+    tint_color = 0xf2f2f700,
 
     light = neutral_light,
     dark = neutral_dark,
@@ -110,12 +177,25 @@ if hl.plugin.hyprglass then
     layers = { enabled = true },
   })
 
-  -- omarchy-bar is the taskbar's layer namespace (confirmed via `hyprctl layers`).
+  -- Every Quickshell surface namespace whitelisted so the real hyprglass
+  -- refraction (not just plain hl.layer_rule blur below) covers all of them,
+  -- not only the bar. Names confirmed via `hyprctl layers` while each panel
+  -- was open.
   hg.layer("omarchy-bar", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-menu", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-image-selector", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-emojis", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-clipboard", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-keyboard-panel", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-osd", { preset = "clear", mask_threshold = 0.05 })
+  hg.layer("omarchy-notifications", { preset = "clear", mask_threshold = 0.05 })
 
+  -- blur_strength/iterations pushed to their practical maximum (iterations
+  -- is hard-capped at 5 by the plugin) for the strongest frost the effect
+  -- supports.
   hg.preset("clear", {
     glass_opacity = 1.0,
-    blur_strength = 15.0,
+    blur_strength = 30.0,
     blur_iterations = 5,
     refraction_strength = 0.15,
     chromatic_aberration = 0.05,
